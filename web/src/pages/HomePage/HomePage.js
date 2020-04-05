@@ -2,8 +2,25 @@ import {Line as LineChart} from 'react-chartjs-2';
 
 import React, { useEffect, useState } from 'react';
 
-const HomePage = () => {
+//TODO find out how to get query parameters from React/Router?
+const query =document.location.search;
+var symbols = []
+if (query) {
+  (query.split("?")[1].split("&")).forEach(function(p) {
+    if (p!="") {
+      var splits = p.split("=")
+      switch (splits[0]) {
+        case 'symbols':
+          symbols = splits[1].split(",")
+          break;
+        default:
+          break;
+      }
+    }
+  })
+}
 
+const HomePage = () => {
   const defaultChartData = {}
   const [isLoading, setLoading] = useState(true);
   const [chartData, setData] = useState(defaultChartData);
@@ -51,7 +68,7 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    fetch('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=XX64LMA248QI0L6B')
+    fetch('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+symbols[0]+'&apikey=XX64LMA248QI0L6B')
       .then((response) => response.json())
       .then((json) => setData(generateChartData(json)))
       .catch((error) => console.error(error))
