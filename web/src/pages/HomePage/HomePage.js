@@ -9,28 +9,23 @@ const HomePage = () => {
   const [chartData, setData] = useState(defaultChartData);
   function generateChartData(json) {
     var myData = json['Time Series (Daily)']
-    console.log(myData)
     var dates = Object.keys(myData).map(function(d) {
       return new Date(d)
     })
-    console.log(dates)
     var min = new Date(Math.min( ...dates ))
     var minDate = min.getFullYear().toString() + "-" +
                   (min.getMonth() +1).toString() + "-" +
                   min.getDate().toString()
-    console.log(minDate)
     var firstClose = Number(myData[minDate]["4. close"])
-    console.log(firstClose)
 
     var time = []
     for(var day in myData) {
       time.push({
         x: new Date(day),
-        y: Number(myData[day]["4. close"])/firstClose
+        y: Number(myData[day]["4. close"])/firstClose*100
       })
     }
     var chartData = {
-      //labels: labels,
       datasets: [
           {
               label: json['Meta Data']['2. Symbol'],
