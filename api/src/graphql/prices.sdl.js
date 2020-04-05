@@ -6,8 +6,13 @@ export const schema = gql`
     value: Int!
   }
 
-  type Query {
+  type SymbolPrice {
+    symbol_exchange: String!
     prices: [Price]
+  }
+
+  type Query {
+    prices(symbols: [String]): [SymbolPrice]
   }
 
   input PriceInput {
