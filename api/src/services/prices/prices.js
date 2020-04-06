@@ -28,7 +28,10 @@ export const updatePrices = (symbol_exchange) => {
         select: {date: true},
         where: { symbol_exchange: symbol_exchange}
       }).then((result) => {
-        const lastDate = new Date (Math.max.apply(null, result.map((e)=> e.date)))
+        var lastDate = new Date (Math.max.apply(null, result.map((e)=> e.date)))
+        if(isNaN(lastDate)) {
+          lastDate = new Date(2020,1,1);
+        }
         console.log(symbol_exchange + ", last update: " + lastDate)
 
         var today = new Date();
