@@ -49,7 +49,9 @@ export const updatePrices = (symbol_exchange) => {
           console.log("Update started")
           var from = lastDate.getFullYear() + "-" + (lastDate.getMonth()+1) + "-" + lastDate.getDate()
           console.log("From " + from)
-          fetch('http://localhost:8910/.netlify/functions/updatePricesForSymbol?symbol='+symbol_exchange+'&from='+from)
+          fetch('https://olitrack.netlify.com/.netlify/functions/updatePricesForSymbol?symbol='+symbol_exchange+'&from='+from)
+
+          // fetch('http://localhost:8910/.netlify/functions/updatePricesForSymbol?symbol='+symbol_exchange+'&from='+from)
           //updatePricesForSymbol(symbol_exchange, from)
 
         }
