@@ -90,7 +90,7 @@ export const Success = ({ prices, symbols }) => {
             }]
           }
       }
-  const pricesDump = JSON.stringify(prices)
+  // const pricesDump = JSON.stringify(prices)
   return (
     <div>
       {/* {pricesDump} */}

@@ -15,12 +15,28 @@ export const savePrices = (symbol_exchange, prices) => {
   // console.log(prices)
 }
 
+export const fetchUpdate = async function (symbol_exchange, from) {
+  // const url = "https://eodhistoricaldata.com/api/eod/AAPL.US?from="+from+"-1&api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX&period=d&fmt=json"
+  const url = "https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json"
+
+  console.log(url)
+  var response = await fetch(url)
+  console.log(response)
+  var json = await response.json()
+  console.log(json)
+  console.log(await savePrices(symbol_exchange,json))
+     //fetch("https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json")
+            // .then((response) => response.json())
+            // .then((json) => savePrices(symbol_exchange,json))
+            // .catch((error) => console.error(error))
+}
+
 export const updatePrices = (symbol_exchange) => {
 
   //https://stackoverflow.com/questions/14220321/how-do-i-return-the-response-from-an-asynchronous-call?rq=1
 
   // `delay` returns a promise
-  return new Promise(function(resolve, reject) {
+  return new Promise(async function(resolve, reject) {
       console.log("UPDATING " + symbol_exchange)
 
       console.log("Checking for available dates")
@@ -63,13 +79,8 @@ export const updatePrices = (symbol_exchange) => {
           console.log("Update started")
           var from = lastDate.getFullYear() + "-" + (lastDate.getMonth()+1) + "-" + lastDate.getDate()
           console.log("From " + from)
-          fetch("https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json")
-          //fetch("https://eodhistoricaldata.com/api/eod/AAPL.US?from="+from+"-1&api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX&period=d&fmt=json")
-            .then((response) => response.json())
-            .then((json) => savePrices(symbol_exchange,json))
-            .catch((error) => console.error(error))
+          fetchUpdate(symbol_exchange, from)
         }
-
       })
 
       resolve("Prices Updated");
