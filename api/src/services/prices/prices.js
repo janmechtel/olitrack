@@ -1,8 +1,5 @@
 import { db } from 'src/lib/db'
 import fetch from 'node-fetch'
-import importAll from '@redwoodjs/api/importAll.macro'
-import updatePricesForSymbol from 'api/src/functions/updatePricesForSymbol'
-// const functions = importAll('functions')
 
 export const updatePrices = (symbol_exchange) => {
 
