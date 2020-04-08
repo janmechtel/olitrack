@@ -1,35 +1,8 @@
 import { db } from 'src/lib/db'
 import fetch from 'node-fetch'
-
-export const savePrices = (symbol_exchange, prices) => {
-  console.log("Saving new price data for " + symbol_exchange)
-  prices.forEach(price => {
-    db.price.create ({data: {
-      symbol_exchange: symbol_exchange,
-      date: new Date(price.date),
-      value:  Math.trunc(Number(price.adjusted_close*100))
-    }})
-      .then((r) => console.log(r))
-      .catch((error) => true) //TODO prevent duplicates
-  });
-  // console.log(prices)
-}
-
-export const fetchUpdate = async function (symbol_exchange, from) {
-  // const url = "https://eodhistoricaldata.com/api/eod/AAPL.US?from="+from+"-1&api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX&period=d&fmt=json"
-  const url = "https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json"
-
-  console.log(url)
-  var response = await fetch(url)
-  console.log(response)
-  var json = await response.json()
-  console.log(json)
-  console.log(await savePrices(symbol_exchange,json))
-     //fetch("https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json")
-            // .then((response) => response.json())
-            // .then((json) => savePrices(symbol_exchange,json))
-            // .catch((error) => console.error(error))
-}
+import importAll from '@redwoodjs/api/importAll.macro'
+import updatePricesForSymbol from 'api/src/functions/updatePricesForSymbol'
+// const functions = importAll('functions')
 
 export const updatePrices = (symbol_exchange) => {
 
@@ -79,7 +52,9 @@ export const updatePrices = (symbol_exchange) => {
           console.log("Update started")
           var from = lastDate.getFullYear() + "-" + (lastDate.getMonth()+1) + "-" + lastDate.getDate()
           console.log("From " + from)
-          fetchUpdate(symbol_exchange, from)
+          fetch('http://localhost:8910/.netlify/functions/updatePricesForSymbol?symbol='+symbol_exchange+'&from='+from)
+          //updatePricesForSymbol(symbol_exchange, from)
+
         }
       })
 
@@ -95,7 +70,6 @@ export const prices = (input) => {
     const values = db.price.findMany({
       where: { symbol_exchange: symbol_exchange}
     })
-
     updatePrices(symbol_exchange)
 
     symbolsPrices.push({
