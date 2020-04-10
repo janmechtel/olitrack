@@ -4,13 +4,17 @@ import fetch from 'node-fetch'
 export const savePrices = (symbol_exchange, prices) => {
   console.log("Saving new price data for " + symbol_exchange)
   prices.forEach(price => {
-    db.price.create ({data: {
-      symbol_exchange: symbol_exchange,
-      date: new Date(price.date),
-      value:  Math.trunc(Number(price.adjusted_close*100))
-    }})
-      .then((r) => console.log(r))
-      .catch((error) => true) //TODO prevent duplicates
+    try {
+      var price = await db.price.create ({data: {
+        symbol_exchange: symbol_exchange,
+        date: new Date(price.date),
+        value:  Math.trunc(Number(price.adjusted_close*100))
+      }})
+      console.log(price)
+
+    } catch(error) {
+        console.log(error)
+    }
   });
   // console.log(prices)
   return {result:"Success"}
