@@ -25,8 +25,8 @@ exports.handler = async (event, context) => {
   const from = event.queryStringParameters.from;
   console.log(from + "-" + symbol_exchange)
 
-  const url = "https://eodhistoricaldata.com/api/eod/AAPL.US?from="+from+"-1&api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX&period=d&fmt=json"
-  // const url = "https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+event.queryStringParameters.from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json"
+  // const url = "https://eodhistoricaldata.com/api/eod/AAPL.US?from="+from+"-1&api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX&period=d&fmt=json"
+  const url = "https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+event.queryStringParameters.from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json"
 
   console.log(url)
   var response = await fetch(url)
