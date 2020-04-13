@@ -15,11 +15,10 @@ export const updatePrices = (symbol_exchange) => {
         where: { symbol_exchange: symbol_exchange}
       }).then((result) => {
         var lastDate = new Date (Math.max.apply(null, result.map((e)=> e.date)))
-        if(isNaN(lastDate)) {
-          lastDate = new Date(2020,1,1);
-        }
         console.log(symbol_exchange + ", last update: " + lastDate)
-
+        if(isNaN(lastDate)) {
+          lastDate = new Date(2019,12,31);
+        }
         var today = new Date();
         var timeDiff = Math.abs(today.getTime() - lastDate.getTime());
         var diffDays = Math.floor(timeDiff / (1000 * 3600 * 24));
@@ -45,15 +44,16 @@ export const updatePrices = (symbol_exchange) => {
 
         console.log("Update needed? " + updateNeeded)
 
+        lastDate = new Date(lastDate.setTime( lastDate.getTime() + 1 * 86400000 ));
         if (updateNeeded) {
           console.log("Update started")
           var from = lastDate.getFullYear() + "-" + (lastDate.getMonth()+1) + "-" + lastDate.getDate()
           console.log("From " + from)
-          fetch('https://olitrack.netlify.com/.netlify/functions/updatePricesForSymbol?symbol='+symbol_exchange+'&from='+from)
-
-          // fetch('http://localhost:8910/.netlify/functions/updatePricesForSymbol?symbol='+symbol_exchange+'&from='+from)
-          //updatePricesForSymbol(symbol_exchange, from)
-
+          if (process.env.OLITRACK_ENVIRONMENT == "dev") {
+            fetch('http://localhost:8910/.netlify/functions/updatePricesForSymbol?symbol='+symbol_exchange+'&from='+from)
+          } else {
+            fetch('https://olitrack.netlify.com/.netlify/functions/updatePricesForSymbol?symbol='+symbol_exchange+'&from='+from)
+          }
         }
       })
 

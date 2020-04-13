@@ -12,7 +12,9 @@ const savePrices = async (symbol_exchange, prices) => {
       }})
       console.log(price)
     } catch(error) {
-        console.log(error)
+      console.log(index)
+      console.log(prices[index])
+      console.log(error)
     }
   }
   // console.log(prices)
@@ -24,13 +26,14 @@ exports.handler = async (event, context) => {
   const symbol_exchange = event.queryStringParameters.symbol;
   const from = event.queryStringParameters.from;
   console.log(from + "-" + symbol_exchange)
-
-  // const url = "https://eodhistoricaldata.com/api/eod/AAPL.US?from="+from+"-1&api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX&period=d&fmt=json"
-  const url = "https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+event.queryStringParameters.from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json"
+  let url = "https://eodhistoricaldata.com/api/eod/"+symbol_exchange+"?from="+event.queryStringParameters.from+"&api_token=5e89e1d8bc5662.72708807&period=d&fmt=json"
+  if (process.env.OLITRACK_ENVIRONMENT == "dev") {
+    url = "https://eodhistoricaldata.com/api/eod/AAPL.US?from="+from+"-1&api_token=OeAFFmMliFG5orCUuwAKQ8l4WWFQ67YX&period=d&fmt=json"
+  }
 
   console.log(url)
   var response = await fetch(url)
-  console.log(response)
+  // console.log(response)
   var json = await response.json()
   await savePrices(symbol_exchange,json)
   console.log("done with updating")
